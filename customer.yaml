@@ -15,10 +15,26 @@ spec:
         app: customer
     spec:
       containers:
-        - name: customer
-          image: hm716/customer
-          ports:
-            - containerPort: 8080
+      - name: Customer
+        image: hm716/customer:latest
+        ports:
+        - containerPort: 8080
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: username
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: password
+          - name: POSTGRES_HOST_AUTH_METHOD
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres-url
 
 ---
 apiVersion: v1
@@ -26,9 +42,9 @@ kind: Service
 metadata:
   name: customer-service
 spec:
-  type: NodePort
   selector:
     app: customer
+  type: NodePort
   ports:
     - protocol: TCP
       port: 8080

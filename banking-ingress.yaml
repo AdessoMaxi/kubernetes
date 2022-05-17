@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: banking-ingress
+  namespace: banking-dashboard
+spec:
+  tls:
+   - hosts:
+     - banking.com
+     secretName: banking-secret-tls
+  rules:
+      http:
+        paths:
+          - path: /customer
+          backend:
+            service:
+              name: banking
+                port:
+                  number: 8080

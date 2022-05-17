@@ -20,6 +20,22 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8085
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name:
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: postgres-url
 
 ---
 apiVersion: v1
@@ -27,7 +43,7 @@ kind: Service
 metadata:
   name: account-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: account
   ports:
