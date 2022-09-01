@@ -13,11 +13,11 @@ steps:
 - script: gradle clean build
   displayName: Build the jar
 
-- task: Docker@2
-  inputs:
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+- script: docker build -t northrest/kubernetes .
+  displayName: Build the Image
 
+- script: docker push northrest/kubernetes
+  displayName: Push the Image
 - task: Gradle@2
   inputs:
     workingDirectory: ''
